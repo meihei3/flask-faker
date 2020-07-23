@@ -11,3 +11,6 @@ ADD requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
 
 RUN cp /etc/mecabrc /usr/local/etc/
+
+WORKDIR /app
+CMD ["python", "index.py"]

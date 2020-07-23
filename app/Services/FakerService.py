@@ -1,6 +1,7 @@
 from faker import Faker
 from faker.config import AVAILABLE_LOCALES
 from Services.FakerError import FakerError
+from faker.providers.person.ja_JP import Provider
 DEFAULT_LANG = 'ja_JP'
 
 
@@ -9,6 +10,7 @@ class FakerService:
     SEED = 'seed'
 
     def __init__(self, lang=DEFAULT_LANG, seed=None):
+        print(Provider.first_names_male)
         self.__error = None
         self.validate(lang=lang, seed=seed)
 
@@ -31,7 +33,7 @@ class FakerService:
             self.__set_error(FakerError.NOT_SUPPORTED_LANG)
 
     def __validation_seed(self, value):
-        if (not isinstance(value, int)):
+        if (value is not None and not isinstance(value, int)):
             self.__set_error(FakerError.NOT_INTEGER_TYPE)
 
     def __set_error(self, err):

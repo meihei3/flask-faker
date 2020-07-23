@@ -7,4 +7,7 @@ RUN apt-get update \
     mecab-ipadic-utf8 \
     swig
 
-RUN pip install mecab-python3 flask faker
+ADD requirements.txt ./requirements.txt
+RUN pip install -r requirements.txt
+
+RUN cp /etc/mecabrc /usr/local/etc/

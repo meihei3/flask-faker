@@ -1,10 +1,10 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from faker import Faker
-from faker.config import AVAILABLE_LOCALES
-from Services.FakerService import FakerService
-from Services.FakerError import FakerError
+from services.fakerService import FakerService
+from services.fakerError import FakerError
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 LANG = 'ja_JP'
 
 
@@ -14,16 +14,15 @@ def hello():
     return name
 
 
-@app.route('/name', methods=['GET'])
-def name():
+@app.route('/person', methods=['GET'])
+def person():
     lang = request.args.get('lang', LANG)
     seed = request.args.get('seed', None)
+    count = request.args.get('count', None)
 
-    service = FakerService(lang, 0)
-    if (service.error in (FakerError.NOT_SUPPORTED_LANG, FakerError.NOT_INTEGER_TYPE)):
-        return {'message': 'error'}
+    service = FakerService(lang)
 
-    return service.faker.name()
+    return jsonify(service.execute('person'))
 
 
 if __name__ == "__main__":

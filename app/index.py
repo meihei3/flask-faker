@@ -1,11 +1,10 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from faker import Faker
-from faker.config import AVAILABLE_LOCALES
-from Services.FakerService import FakerService
-from Services.FakerError import FakerError
+from services.fakerService import FakerService
+from services.fakerError import FakerError
 
 app = Flask(__name__)
-LANG = 'ja_JP'
+app.config['JSON_AS_ASCII'] = False
 
 
 @app.route('/')
@@ -14,16 +13,34 @@ def hello():
     return name
 
 
-@app.route('/name', methods=['GET'])
-def name():
-    lang = request.args.get('lang', LANG)
-    seed = request.args.get('seed', None)
+@app.route('/person', methods=['GET'])
+def person():
+    seed = request.args.get('seed', None, type=int)
+    count = request.args.get('count', None, type=int)
 
-    service = FakerService(lang, 0)
-    if (service.error in (FakerError.NOT_SUPPORTED_LANG, FakerError.NOT_INTEGER_TYPE)):
-        return {'message': 'error'}
+    service = FakerService(seed, count)
 
-    return service.faker.name()
+    return jsonify(service.execute('person'))
+
+
+@app.route('/person/female', methods=['GET'])
+def person_female():
+    seed = request.args.get('seed', None, type=int)
+    count = request.args.get('count', None, type=int)
+
+    service = FakerService(seed, count)
+
+    return jsonify(service.execute('person_female'))
+
+
+@app.route('/person/male', methods=['GET'])
+def person_male():
+    seed = request.args.get('seed', None, type=int)
+    count = request.args.get('count', None, type=int)
+
+    service = FakerService(seed, count)
+
+    return jsonify(service.execute('person_male'))
 
 
 if __name__ == "__main__":

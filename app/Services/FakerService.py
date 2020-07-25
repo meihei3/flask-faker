@@ -5,26 +5,21 @@ from fakerProviders.personProvider import PersonProvider
 from fakerProviders.utils import TransactionNameIndex
 
 
-DEFAULT_LANG = 'ja_JP'
-
-
 class FakerService:
-    LANG = 'lang'
     SEED = 'seed'
     COUNT = 'count'
 
-    def __init__(self, lang=DEFAULT_LANG, seed=None, count=None):
+    def __init__(self, seed: str = None, count: str = None):
         self.__error = None
-        self.__lang = lang
         self.__seed = seed
         self.__count = count
-        self.__validate(lang=lang, seed=seed, count=count)
 
         self.faker = Faker()
         self.faker.seed_instance(self.__seed)
         self.faker.add_provider(PersonProvider)
 
-    def execute(self, func):
+    def execute(self, func: str):
+        # 気持ち悪いので将来的には直す
         if func == 'person':
             return self.person()
 
@@ -36,10 +31,11 @@ class FakerService:
         self.__error = err
 
     def person(self):
-        name = self.faker.last_name()
-        return self.__generate_person(name)
+        if (self.__count is None):
+            return self.__generate_person()
+        return [self.__generate_person() for _ in range(self.__count)]
 
-    def __generate_person(self, name: list):
+    def __generate_person(self):
         index = TransactionNameIndex(self.faker.pyint(), self.faker.pyint())
         return {
             'name': self.faker.indexed_name(index),
@@ -52,27 +48,3 @@ class FakerService:
             'first_romanized_name': self.faker.indexed_first_romanized_name(index),
             'sex': self.faker.indexed_sex(index),
         }
-
-    def __validate(self, **kwargs):
-        for key, val in kwargs.items():
-            if key == self.LANG:
-                self.__validation_lang(val)
-            elif key == self.SEED:
-                self.__validation_seed(val)
-            elif key == self.COUNT:
-                self.__validation_count(val)
-
-    def __validation_lang(self, value):
-        if value not in AVAILABLE_LOCALES:
-            self.__lang = DEFAULT_LANG
-
-    def __validation_seed(self, value):
-        if not self.__is_none_or_int(value):
-            self.__seed = None
-
-    def __validation_count(self, value):
-        if not self.__is_none_or_int(value):
-            self.__count = None
-
-    def __is_none_or_int(self, value):
-        return value is None or isinstance(value, int)

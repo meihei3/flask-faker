@@ -121,10 +121,28 @@ class PersonProvider(Provider):
     def __prepare_index(self, index: TransactionNameIndex) -> Tuple[int, int]:
         return index.first % self.first_names_size, index.last % self.last_names_size
 
+    def __prepare_index_female(self, index: TransactionNameIndex) -> Tuple[int, int]:
+        return index.first % self.first_names_female_size, index.last % self.last_names_size
+
+    def __prepare_index_male(self, index: TransactionNameIndex) -> Tuple[int, int]:
+        return index.first % self.first_names_male_size, index.last % self.last_names_size
+
     def indexed_name(self, index: TransactionNameIndex) -> str:
         fi, li = self.__prepare_index(index)
         return "%s %s" % (
             self.last_names[li], self.first_names[fi]
+        )
+
+    def indexed_name_female(self, index: TransactionNameIndex) -> str:
+        fi, li = self.__prepare_index_female(index)
+        return "%s %s" % (
+            self.last_names[li], self.first_names_female[fi]
+        )
+
+    def indexed_name_male(self, index: TransactionNameIndex) -> str:
+        fi, li = self.__prepare_index_male(index)
+        return "%s %s" % (
+            self.last_names[li], self.first_names_male[fi]
         )
 
     def indexed_kana_name(self, index: TransactionNameIndex) -> str:
@@ -133,41 +151,70 @@ class PersonProvider(Provider):
             self.last_kana_names[li], self.first_kana_names[fi]
         )
 
+    def indexed_kana_name_female(self, index: TransactionNameIndex) -> str:
+        fi, li = self.__prepare_index_female(index)
+        return "%s %s" % (
+            self.last_kana_names[li], self.first_kana_names_female[fi]
+        )
+
+    def indexed_kana_name_male(self, index: TransactionNameIndex) -> str:
+        fi, li = self.__prepare_index_male(index)
+        return "%s %s" % (
+            self.last_kana_names[li], self.first_kana_names_male[fi]
+        )
+
     def indexed_romanized_name(self, index: TransactionNameIndex) -> str:
         fi, li = self.__prepare_index(index)
         return "%s %s" % (
             self.last_romanized_names[li], self.first_romanized_names[fi]
         )
 
+    def indexed_romanized_name_female(self, index: TransactionNameIndex) -> str:
+        fi, li = self.__prepare_index_female(index)
+        return "%s %s" % (
+            self.last_romanized_names[li], self.first_romanized_names_female[fi]
+        )
+
+    def indexed_romanized_name_male(self, index: TransactionNameIndex) -> str:
+        fi, li = self.__prepare_index_male(index)
+        return "%s %s" % (
+            self.last_romanized_names[li], self.first_romanized_names_male[fi]
+        )
+
     def indexed_first_name(self, index: TransactionNameIndex) -> str:
         fi, _ = self.__prepare_index(index)
         return self.first_names[fi]
+
+    def indexed_first_name_female(self, index: TransactionNameIndex) -> str:
+        fi, _ = self.__prepare_index_female(index)
+        return self.first_names_female[fi]
+
+    def indexed_first_name_male(self, index: TransactionNameIndex) -> str:
+        fi, _ = self.__prepare_index_male(index)
+        return self.first_names_male[fi]
 
     def indexed_first_kana_name(self, index: TransactionNameIndex) -> str:
         fi, _ = self.__prepare_index(index)
         return self.first_kana_names[fi]
 
-    def indexed_first_kana_name_female(
-            self, index: TransactionNameIndex) -> str:
-        fi, _ = self.__prepare_index(index)
+    def indexed_first_kana_name_female(self, index: TransactionNameIndex) -> str:
+        fi, _ = self.__prepare_index_female(index)
         return self.first_kana_names_female[fi]
 
     def indexed_first_kana_name_male(self, index: TransactionNameIndex) -> str:
-        fi, _ = self.__prepare_index(index)
+        fi, _ = self.__prepare_index_male(index)
         return self.first_kana_names_male[fi]
 
     def indexed_first_romanized_name(self, index: TransactionNameIndex) -> str:
         fi, _ = self.__prepare_index(index)
         return self.first_romanized_names[fi]
 
-    def indexed_first_romanized_name_female(
-            self, index: TransactionNameIndex) -> str:
-        fi, _ = self.__prepare_index(index)
+    def indexed_first_romanized_name_female(self, index: TransactionNameIndex) -> str:
+        fi, _ = self.__prepare_index_female(index)
         return self.first_romanized_names_female[fi]
 
-    def indexed_first_romanized_name_male(
-            self, index: TransactionNameIndex) -> str:
-        fi, _ = self.__prepare_index(index)
+    def indexed_first_romanized_name_male(self, index: TransactionNameIndex) -> str:
+        fi, _ = self.__prepare_index_male(index)
         return self.first_romanized_names_male[fi]
 
     def indexed_last_name(self, index: TransactionNameIndex) -> str:

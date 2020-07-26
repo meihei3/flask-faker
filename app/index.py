@@ -32,5 +32,15 @@ def person_sexes(sex: str):
     return abort(404)
 
 
+@app.route('/address', methods=['GET'])
+def address():
+    seed = request.args.get('seed', None, type=int)
+    count = request.args.get('count', None, type=int)
+
+    service = FakerService(seed, count)
+
+    return jsonify(service.execute('address'))
+
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=80, threaded=True)

@@ -1,7 +1,8 @@
 from faker import Faker
 from services.fakerError import FakerError
 from fakerProviders.personProvider import PersonProvider
-from fakerProviders.utils import TransactionNameIndex
+from fakerProviders.addressProvider import AddressProvider
+from fakerProviders.utils import TransactionNameIndex, TransactionAddressIndex
 from collections import namedtuple
 
 
@@ -27,6 +28,7 @@ class FakerService:
         self.faker = Faker(DEFAULT_LANG)
         self.faker.seed_instance(self.__seed)
         self.faker.add_provider(PersonProvider)
+        self.faker.add_provider(AddressProvider)
 
     def execute(self, func: str):
         # 気持ち悪いので将来的には直す
@@ -36,6 +38,8 @@ class FakerService:
             return self.person_female()
         elif func == 'person_male':
             return self.person_male()
+        elif func == 'address':
+            return self.address()
 
     @property
     def error(self):
@@ -59,6 +63,11 @@ class FakerService:
             return self.__generate_person(self.MALE)
         return [self.__generate_person(self.MALE) for _ in range(self.__count)]
 
+    def address(self):
+        if (self.__count is None):
+            return self.__generate_address()
+        return [self.__generate_address() for _ in range(self.__count)]
+
     def __generate_person(self, sex: str = ALL):
         index = TransactionNameIndex(self.faker.pyint(), self.faker.pyint())
         caller = self.__generate_person_functions(sex)
@@ -73,6 +82,28 @@ class FakerService:
             'first_kana_name': caller.first_kana_name(index),
             'first_romanized_name': caller.first_romanized_name(index),
             'sex': caller.sex(index),
+        }
+
+    def __generate_address(self):
+        index = TransactionAddressIndex(*([self.faker.pyint() for i in range(9)]))
+        return {
+            'address': self.faker.indexed_address(index),
+            'address_kana': self.faker.indexed_address_kana(index),
+            'prefecture': self.faker.indexed_prefecture(index),
+            'prefecture_kana': self.faker.indexed_prefecture_kana(index),
+            'city': self.faker.indexed_city(index),
+            'city_kana': self.faker.indexed_city_kana(index),
+            'town': self.faker.indexed_town(index),
+            'town_kana': self.faker.indexed_town_kana(index),
+            'chome': self.faker.indexed_chome(index),
+            'chome_kana': self.faker.indexed_chome_kana(index),
+            'ban': self.faker.indexed_ban(index),
+            'ban_kana': self.faker.indexed_ban_kana(index),
+            'gou': self.faker.indexed_gou(index),
+            'gou_kana': self.faker.indexed_gou_kana(index),
+            'building_name': self.faker.indexed_building_name(index),
+            'building_name_kana': self.faker.indexed_building_name_kana(index),
+            'building_number': self.faker.indexed_building_number(index),
         }
 
     def __generate_person_functions(self, sex: str) -> PersonFunctions:

@@ -104,6 +104,7 @@ class FakerService:
             'building_name': self.faker.indexed_building_name(index),
             'building_name_kana': self.faker.indexed_building_name_kana(index),
             'building_number': self.faker.indexed_building_number(index),
+            'zipcode': self.faker.zipcode()
         }
 
     def __generate_person_functions(self, sex: str) -> PersonFunctions:

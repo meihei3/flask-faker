@@ -1,16 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 from faker import Faker
 from services.fakerService import FakerService
 from services.fakerError import FakerError
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
-
-
-@app.route('/')
-def hello():
-    name = "こんにちは世界。"
-    return name
 
 
 @app.route('/person', methods=['GET'])
@@ -23,24 +17,29 @@ def person():
     return jsonify(service.execute('person'))
 
 
-@app.route('/person/female', methods=['GET'])
-def person_female():
+@app.route('/person/<string:sex>', methods=['GET'])
+def person_sexes(sex: str):
     seed = request.args.get('seed', None, type=int)
     count = request.args.get('count', None, type=int)
 
     service = FakerService(seed, count)
 
-    return jsonify(service.execute('person_female'))
+    if sex == FakerService.FEMALE:
+        return jsonify(service.execute(f'person_{FakerService.FEMALE}'))
+    elif sex == FakerService.MALE:
+        return jsonify(service.execute(f'person_{FakerService.MALE}'))
+
+    return abort(404)
 
 
-@app.route('/person/male', methods=['GET'])
-def person_male():
+@app.route('/address', methods=['GET'])
+def address():
     seed = request.args.get('seed', None, type=int)
     count = request.args.get('count', None, type=int)
 
     service = FakerService(seed, count)
 
-    return jsonify(service.execute('person_male'))
+    return jsonify(service.execute('address'))
 
 
 if __name__ == "__main__":

@@ -1,9 +1,11 @@
 from faker import Faker
-from faker.config import AVAILABLE_LOCALES
 from services.fakerError import FakerError
 from fakerProviders.personProvider import PersonProvider
 from fakerProviders.utils import TransactionNameIndex
 from collections import namedtuple
+
+
+DEFAULT_LANG = 'ja_JP'
 
 
 class FakerService:
@@ -22,7 +24,7 @@ class FakerService:
         self.__seed = seed
         self.__count = count
 
-        self.faker = Faker()
+        self.faker = Faker(DEFAULT_LANG)
         self.faker.seed_instance(self.__seed)
         self.faker.add_provider(PersonProvider)
 
@@ -76,40 +78,40 @@ class FakerService:
     def __generate_person_functions(self, sex: str) -> PersonFunctions:
         if sex == self.ALL:
             return FakerService.PersonFunctions(
-                name = self.faker.indexed_name,
-                kana_name = self.faker.indexed_kana_name,
-                romanized_name = self.faker.indexed_romanized_name,
-                last_name = self.faker.indexed_last_name,
-                last_kana_name = self.faker.indexed_last_kana_name,
-                last_romanized_name = self.faker.indexed_last_romanized_name,
-                first_name = self.faker.indexed_first_name,
-                first_kana_name = self.faker.indexed_first_kana_name,
-                first_romanized_name = self.faker.indexed_first_romanized_name,
-                sex = self.faker.indexed_sex,
+                name=self.faker.indexed_name,
+                kana_name=self.faker.indexed_kana_name,
+                romanized_name=self.faker.indexed_romanized_name,
+                last_name=self.faker.indexed_last_name,
+                last_kana_name=self.faker.indexed_last_kana_name,
+                last_romanized_name=self.faker.indexed_last_romanized_name,
+                first_name=self.faker.indexed_first_name,
+                first_kana_name=self.faker.indexed_first_kana_name,
+                first_romanized_name=self.faker.indexed_first_romanized_name,
+                sex=self.faker.indexed_sex,
             )
         elif sex == self.FEMALE:
             return FakerService.PersonFunctions(
-                name = self.faker.indexed_name_female,
-                kana_name = self.faker.indexed_kana_name_female,
-                romanized_name = self.faker.indexed_romanized_name_female,
-                last_name = self.faker.indexed_last_name,
-                last_kana_name = self.faker.indexed_last_kana_name,
-                last_romanized_name = self.faker.indexed_last_romanized_name,
-                first_name = self.faker.indexed_first_name_female,
-                first_kana_name = self.faker.indexed_first_kana_name_female,
-                first_romanized_name = self.faker.indexed_first_romanized_name_female,
-                sex = lambda _: self.FEMALE,
+                name=self.faker.indexed_name_female,
+                kana_name=self.faker.indexed_kana_name_female,
+                romanized_name=self.faker.indexed_romanized_name_female,
+                last_name=self.faker.indexed_last_name,
+                last_kana_name=self.faker.indexed_last_kana_name,
+                last_romanized_name=self.faker.indexed_last_romanized_name,
+                first_name=self.faker.indexed_first_name_female,
+                first_kana_name=self.faker.indexed_first_kana_name_female,
+                first_romanized_name=self.faker.indexed_first_romanized_name_female,
+                sex=lambda _: self.FEMALE,
             )
         else:
             return FakerService.PersonFunctions(
-                name = self.faker.indexed_name_male,
-                kana_name = self.faker.indexed_kana_name_male,
-                romanized_name = self.faker.indexed_romanized_name_male,
-                last_name = self.faker.indexed_last_name,
-                last_kana_name = self.faker.indexed_last_kana_name,
-                last_romanized_name = self.faker.indexed_last_romanized_name,
-                first_name = self.faker.indexed_first_name_male,
-                first_kana_name = self.faker.indexed_first_kana_name_male,
-                first_romanized_name = self.faker.indexed_first_romanized_name_male,
-                sex = lambda _: self.MALE,
+                name=self.faker.indexed_name_male,
+                kana_name=self.faker.indexed_kana_name_male,
+                romanized_name=self.faker.indexed_romanized_name_male,
+                last_name=self.faker.indexed_last_name,
+                last_kana_name=self.faker.indexed_last_kana_name,
+                last_romanized_name=self.faker.indexed_last_romanized_name,
+                first_name=self.faker.indexed_first_name_male,
+                first_kana_name=self.faker.indexed_first_kana_name_male,
+                first_romanized_name=self.faker.indexed_first_romanized_name_male,
+                sex=lambda _: self.MALE,
             )

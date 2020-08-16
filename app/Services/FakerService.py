@@ -85,27 +85,48 @@ class FakerService:
         }
 
     def __generate_address(self):
-        index = TransactionAddressIndex(*([self.faker.pyint() for i in range(9)]))
-        return {
-            'address': self.faker.indexed_address(index),
-            'address_kana': self.faker.indexed_address_kana(index),
-            'prefecture': self.faker.indexed_prefecture(index),
-            'prefecture_kana': self.faker.indexed_prefecture_kana(index),
-            'city': self.faker.indexed_city(index),
-            'city_kana': self.faker.indexed_city_kana(index),
-            'town': self.faker.indexed_town(index),
-            'town_kana': self.faker.indexed_town_kana(index),
-            'chome': self.faker.indexed_chome(index),
-            'chome_kana': self.faker.indexed_chome_kana(index),
-            'ban': self.faker.indexed_ban(index),
-            'ban_kana': self.faker.indexed_ban_kana(index),
-            'gou': self.faker.indexed_gou(index),
-            'gou_kana': self.faker.indexed_gou_kana(index),
-            'building_name': self.faker.indexed_building_name(index),
-            'building_name_kana': self.faker.indexed_building_name_kana(index),
-            'building_number': self.faker.indexed_building_number(index),
-            'zipcode': self.faker.zipcode()
-        }
+        index = TransactionAddressIndex(*([self.faker.pyint() for i in range(6)]))
+        address = self.faker.get_address()
+        address.update(
+            {
+                'chome': self.faker.indexed_chome(index),
+                'chome_kana': self.faker.indexed_chome_kana(index),
+                'ban': self.faker.indexed_ban(index),
+                'ban_kana': self.faker.indexed_ban_kana(index),
+                'gou': self.faker.indexed_gou(index),
+                'gou_kana': self.faker.indexed_gou_kana(index),
+                'building_name': self.faker.indexed_building_name(index, address['town_name']),
+                'building_name_kana': self.faker.indexed_building_name_kana(index, address['town_name_kana']),
+                'building_number': self.faker.indexed_building_number(index),
+            }
+        )
+        address.update(
+            {
+                'address': self.faker.get_full_address(
+                    self.faker.get_address_format(index),
+                    address['prefecture_name'],
+                    address['city_name'],
+                    address['town_name'],
+                    address['chome'],
+                    address['ban'],
+                    address['gou'],
+                    address['building_name'],
+                    address['building_number']
+                ),
+                'address_kana': self.faker.get_full_address(
+                    self.faker.get_address_format(index),
+                    address['prefecture_name_kana'],
+                    address['city_name_kana'],
+                    address['town_name_kana'],
+                    address['chome_kana'],
+                    address['ban_kana'],
+                    address['gou_kana'],
+                    address['building_name_kana'],
+                    address['building_number']
+                ),
+            }
+        )
+        return address
 
     def __generate_person_functions(self, sex: str) -> PersonFunctions:
         if sex == self.ALL:

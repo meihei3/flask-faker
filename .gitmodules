@@ -1,0 +1,3 @@
+[submodule "app/database/zipcode"]
+	path = app/database/zipcode
+	url = https://github.com/kmdsbng/zipcode_jp
